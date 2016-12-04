@@ -1,0 +1,9 @@
+{
+    // Configure glob patterns for excluding files and folders.
+    "files.exclude": {
+        "**/.git": true,
+        "**/*.js.map": true,
+        "**/*.js": { "when": "$(basename).ts" }
+    },
+    "typescript.tsdk": "node_modules/typescript/lib"
+}

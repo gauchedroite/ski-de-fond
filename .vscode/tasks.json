@@ -6,8 +6,8 @@
     "suppressTaskName": true,
     "tasks": [
         {
-            "taskName": "start http server",
-            "args": ["run", "http"]
+            "taskName": "dev loop",
+            "args": ["run", "dev"]
         },
         {
             "taskName": "update gh-pages",

@@ -3,8 +3,8 @@ CACHE MANIFEST
 
 CACHE:
 index.html
-css/styles.css
-scripts/soleil.js
+app.js
+app.css
 images/bg.jpg
 images/icon-114x114.png
 images/icon-144x144.png

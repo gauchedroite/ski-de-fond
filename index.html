@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="utf-8">
-<title>Les conditions</title>
+<title>Les conditions de ski de fond à Gatineau</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
@@ -21,7 +21,6 @@
 
 <link rel="stylesheet" href="css/styles.css" />
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="scripts/soleil.js"></script>
 
 <script type="text/javascript">
@@ -33,7 +32,7 @@ var month_names = [ 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juil
 var periodes = [ '', 'Ce soir', 'Cette nuit', 'Ce matin', 'Cet après-midi' ];
 var updatedDate;
 
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function () {
     google.visualization.Query.setResponse = parseSpreadsheetData_First;
     var url = "https://spreadsheets.google.com/tq?key=0AqeNjAYIAcUedGl0SWVZZzNtQ0JNTVFuR1dRQ3psMlE&pub=1&gid=6";
     var script = document.createElement("script");        
@@ -49,9 +48,9 @@ $(document).ready(function() {
 
     var timezone = new Date().getTimezoneOffset() / 60;
     var sun = computeSunrise(new Date(), 45.5, 75.5);
-    $('#lever-coucher-text').text(formatSunTime(sun.sunriseGMT - timezone) + " - " + formatSunTime(sun.sunsetGMT - timezone));
-    $('#semaine-text').text(formatSunDelta(sun.semaine));
-});
+    document.getElementById("lever-coucher-text").innerHTML = formatSunTime(sun.sunriseGMT - timezone) + " - " + formatSunTime(sun.sunsetGMT - timezone);
+    document.getElementById("semaine-text").innerHTML = formatSunDelta(sun.semaine);
+}, false);
 
 function parseSpreadsheetData_First(response) {
     updatedDate = response.table.rows[0].c[1].v;
@@ -73,33 +72,31 @@ function parseSpreadsheetData_Second(response) {
     var new24 = rows[4].c[2].v;
     var p8 = rows[5].c[2].v;
 
-    $('#updated-text').text(formatUpdated(updatedDate));
-    $('#updated-text-2').text("Il y a " + formatElapsed(updatedDate));
-    $('#wax-text').text(formatWax(wax));
-    $('#snow-text').html(formatSnow(snow));
-    $('#p8-text').text(formatP8(p8));
-    $('#new24-text').text(formatNew24(new24));
+    document.getElementById('updated-text').innerHTML = formatUpdated(updatedDate);
+    document.getElementById('updated-text-2').innerHTML = "Il y a " + formatElapsed(updatedDate);
+    document.getElementById('wax-text').innerHTML = formatWax(wax);
+    document.getElementById('snow-text').innerHTML = formatSnow(snow);
+    document.getElementById('p8-text').innerHTML = formatP8(p8);
+    document.getElementById('new24-text').innerHTML = formatNew24(new24);
 }
 
 function parseCitypageData(response) {
     var obs = response.PACKAGE.Observation;
-    $('#obs-text').html(obs.temperature_c + "&deg;C (" + obs.feelsLike_c + "&deg;C) " + obs.windSpeed_kmh + " km/h");
+    document.getElementById('obs-text').innerHTML = obs.temperature_c + "&deg;C (" + obs.feelsLike_c + "&deg;C) " + obs.windSpeed_kmh + " km/h";
     var pa = response.PACKAGE.ShortTerm.Period[0];
-    $('#forecast-a-text').html(
+    document.getElementById('forecast-a-text').innerHTML = 
         periodes[pa.period] + ": " +
         pa.temperature_c + ' &deg;C (' + pa.feelsLike_c + '&deg;C) ' +
         pa.windSpeed_kmh + ' km/h ' +
         pa.pop_percent + '% ' +
-        (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '')
-    );
+        (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '');
     pa = response.PACKAGE.ShortTerm.Period[1];
-    $('#forecast-b-text').html(
+    document.getElementById('forecast-b-text').innerHTML =
         periodes[pa.period] + ": " +
         pa.temperature_c + ' &deg;C (' + pa.feelsLike_c + '&deg;C) ' +
         pa.windSpeed_kmh + ' km/h ' +
         pa.pop_percent + '% ' +
-        (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '')
-    );
+        (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '');
 }
 
 function formatUpdated(updated) {

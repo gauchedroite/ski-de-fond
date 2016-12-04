@@ -1,0 +1,14 @@
+CACHE MANIFEST
+
+CACHE:
+index.html
+css/styles.css
+scripts/soleil.js
+images/bg.jpg
+images/icon-114x114.png
+images/icon-144x144.png
+images/startup-image-320x460.png
+images/startup-image-640x920.png
+
+NETWORK:
+*

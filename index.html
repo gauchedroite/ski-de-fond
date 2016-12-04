@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html manifest="manifest.appcache">
 <head>
 
 <meta charset="utf-8">
@@ -65,7 +65,6 @@ function parseSpreadsheetData_First(response) {
 }
 
 function parseSpreadsheetData_Second(response) {
-    console.log(response.table);
     var cols = response.table.cols;
     var rows = response.table.rows;
     var updatedTime = rows[7].c[2].v;

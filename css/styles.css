@@ -1,0 +1,98 @@
+
+body
+{
+    margin: 0;
+    font-family: -apple-system, SF UI Text, Helvetica Neue, Helvetica, Arial, sans-serif;
+    line-height: 1.4;
+}
+
+#main {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    background: linear-gradient(rgba(139, 181, 192, 0.5), rgba(139, 181, 192, 0.5)), url(../images/bg.jpg) no-repeat center center fixed;
+    background-size: cover;
+}
+
+.content-block-title {
+  overflow: hidden;
+  margin: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 32px;
+  font-weight: bold;
+  font-style: italic;
+  line-height: 1;
+  padding: 25px 15px 15px;
+  color: #003dc8;
+}
+
+.list-block
+{
+  padding: 0;
+  font-size: 17px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+li {
+  box-sizing: border-box;
+  position: relative;
+}
+
+.item-content {
+    padding-left: 15px;
+    display: flex;
+}
+
+.item-media {
+    display: flex;
+    align-items: center;
+}
+
+.item-inner {
+    display: block;
+    position: relative;
+    margin-left: 15px;
+    padding-top: 8px;
+    padding-right: 15px;
+    padding-bottom: 7px;
+    overflow: hidden;
+}
+
+.item-title {
+    font-size: 20px;
+    font-weight: bold;
+    font-variant: small-caps;
+    color: #003dc8;
+}
+
+.item-subtitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0b105a;
+    background-color: rgba(255, 247, 65, 0.25);
+    display: inline-block;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.item-text {
+    font-size: 12px;
+    overflow: hidden;
+    color: #19356b;
+}
+
+.empty-item-media {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 247, 65, 0.25);
+    border: solid 1px #003dc8;
+    border-radius: 84px;
+}

@@ -1,0 +1,19 @@
+{
+  "name": "ski-de-fond",
+  "version": "0.1.0",
+  "description": "Ski de fond dans le parc de la Gatineau",
+  "main": "index.html",
+  "author": "Christian Trépanier",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gauchedroite/ski-de-fond.git"
+  },
+  "scripts": {
+    "http": "http-server",
+    "pages": "git checkout gh-pages && git merge master && git push origin gh-pages && git checkout master"
+  },
+  "optionalDependencies": {
+    "http-server": "^0.9.0"
+  }
+}

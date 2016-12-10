@@ -6,7 +6,16 @@ google.visualization.Query = {};
 
 var month_names = [ 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre' ];
 var periodes = [ '', 'Ce soir', 'Cette nuit', 'Ce matin', 'Cet après-midi' ];
-var updatedDate: any;
+
+interface ISkiData {
+    updatedDate: string
+    wax: string
+    p8: string
+    temperature: number
+    feelsLike: number
+    windSpeed: number
+}
+let ski = <ISkiData>{};
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -30,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false);
 
 function parseSpreadsheetData_First(response: any) {
-    updatedDate = response.table.rows[0].c[1].v;
+    ski.updatedDate = response.table.rows[0].c[1].v;
 
     google.visualization.Query.setResponse = parseSpreadsheetData_Second;
     var url = "https://spreadsheets.google.com/tq?key=0AqeNjAYIAcUedGl0SWVZZzNtQ0JNTVFuR1dRQ3psMlE&pub=1&gid=4";
@@ -43,23 +52,32 @@ function parseSpreadsheetData_First(response: any) {
 function parseSpreadsheetData_Second(response: any) {
     var cols = response.table.cols;
     var rows = response.table.rows;
-    var updatedTime = rows[7].c[2].v;
     var snow = cols[2].label;
     var wax = rows[3].c[2].v;
     var new24 = rows[4].c[2].v;
     var p8 = rows[5].c[2].v;
 
-    document.getElementById('updated-text').innerHTML = formatUpdated(updatedDate);
-    document.getElementById('updated-text-2').innerHTML = "Il y a " + formatElapsed(updatedDate);
-    document.getElementById('wax-text').innerHTML = formatWax(wax);
+    ski.wax = formatWax(wax);
+    ski.p8 = formatP8(p8);
+    saveToLocalStorage();
+
+    document.getElementById('updated-text').innerHTML = formatUpdated(ski.updatedDate);
+    document.getElementById('updated-text-2').innerHTML = "Il y a " + formatElapsed(ski.updatedDate);
+    document.getElementById('wax-text').innerHTML = ski.wax;
     document.getElementById('snow-text').innerHTML = formatSnow(snow);
-    document.getElementById('p8-text').innerHTML = formatP8(p8);
+    document.getElementById('p8-text').innerHTML = ski.p8;
     document.getElementById('new24-text').innerHTML = formatNew24(new24);
 }
 
 function parseCitypageData(response: any) {
     var obs = response.PACKAGE.Observation;
+    ski.temperature = obs.temperature_c;
+    ski.feelsLike = obs.feelsLike_c;
+    ski.windSpeed = obs.windSpeed_kmh;
+    saveToLocalStorage();
+
     document.getElementById('obs-text').innerHTML = obs.temperature_c + "&deg;C (" + obs.feelsLike_c + "&deg;C) " + obs.windSpeed_kmh + " km/h";
+
     var pa = response.PACKAGE.ShortTerm.Period[0];
     document.getElementById('forecast-a-text').innerHTML = 
         periodes[pa.period] + ": " +
@@ -67,6 +85,7 @@ function parseCitypageData(response: any) {
         pa.windSpeed_kmh + ' km/h ' +
         pa.pop_percent + '% ' +
         (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '');
+
     pa = response.PACKAGE.ShortTerm.Period[1];
     document.getElementById('forecast-b-text').innerHTML =
         periodes[pa.period] + ": " +
@@ -138,3 +157,12 @@ function formatNew24(new24: string) {
     return new24 + " de nouvelle neige dans les dernières 24 heures";
 }
 
+function saveToLocalStorage() {
+    if (ski.updatedDate != undefined && ski.wax != undefined && ski.temperature != undefined) {
+        let key = "K" + ski.updatedDate.replace(/[-:]/g, "");
+        if (localStorage.getItem(key) == null) {
+            localStorage.setItem(key, JSON.stringify(ski))
+            console.log(`Added ${key} to localStorage`);
+        }
+    }
+}

@@ -244,19 +244,19 @@ function SunriseSunset(date, longitude, latitude) {
     };
 }
 /// <reference path="soleil.ts" />
-var google = {};
-google.visualization = {};
-google.visualization.Query = {};
 var month_names = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
 var periodes = ['', 'Ce soir', 'Cette nuit', 'Ce matin', 'Cet après-midi'];
 var ski = {};
 document.addEventListener('DOMContentLoaded', function () {
-    google.visualization.Query.setResponse = parseSpreadsheetData_First;
-    var url = "https://spreadsheets.google.com/tq?key=0AqeNjAYIAcUedGl0SWVZZzNtQ0JNTVFuR1dRQ3psMlE&pub=1&gid=6";
-    var script = document.createElement("script");
-    script.setAttribute("src", url);
-    script.setAttribute("type", "text/javascript");
-    document.body.appendChild(script);
+    var url = "https://services2.arcgis.com/WLyMuW006nKOfa5Z/arcgis/rest/services/AGOL_GP_WINTER_TRAILS_INFO/FeatureServer/0/query?where=1%3D1&returnGeometry=false&outFields=*&f=pgeojson";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            parseEsriData(JSON.parse(xhr.responseText));
+        }
+    };
+    xhr.send();
     var url2 = "https://www.meteomedia.com/dataaccess/citypage/json/caqc0177?callback=parseCitypageData&t=" + new Date().getTime();
     var script2 = document.createElement("script");
     script2.setAttribute("src", url2);
@@ -267,23 +267,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("lever-coucher-text").innerHTML = formatSunTime(sun.sunriseGMT - timezone) + " - " + formatSunTime(sun.sunsetGMT - timezone);
     document.getElementById("semaine-text").innerHTML = formatSunDelta(sun.semaine);
 }, false);
-function parseSpreadsheetData_First(response) {
-    ski.updatedDate = response.table.rows[0].c[1].v;
-    google.visualization.Query.setResponse = parseSpreadsheetData_Second;
-    var url = "https://spreadsheets.google.com/tq?key=0AqeNjAYIAcUedGl0SWVZZzNtQ0JNTVFuR1dRQ3psMlE&pub=1&gid=4";
-    var script = document.createElement("script");
-    script.setAttribute("src", url);
-    script.setAttribute("type", "text/javascript");
-    document.body.appendChild(script);
-}
-function parseSpreadsheetData_Second(response) {
-    var cols = response.table.cols;
-    var rows = response.table.rows;
-    var snow = cols[2].label;
-    var wax = rows[3].c[2].v;
-    var new24 = rows[4].c[2].v;
-    var p8 = rows[5].c[2].v;
-    ski.wax = formatWax(wax);
+function parseEsriData(data) {
+    var props = data.features[0].properties;
+    var snow = props.TEMP;
+    var wax = props.WAX_FR;
+    var new24 = props.SNOW_24HR;
+    var p8 = props.BASE_P8;
+    ski.updatedDate = parseToZulu(props.LAST_UPDATED_EN, props.LAST_UPDATED_FR);
+    ski.wax = wax;
     ski.p8 = formatP8(p8);
     saveToLocalStorage();
     document.getElementById('updated-text').innerHTML = formatUpdated(ski.updatedDate);
@@ -314,6 +305,10 @@ function parseCitypageData(response) {
             pa.windSpeed_kmh + ' km/h ' +
             pa.pop_percent + '% ' +
             (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '');
+}
+function parseToZulu(en, fr) {
+    var enfr = en.split(" at ")[0] + " " + fr.split(" à ")[1].replace("h", ":");
+    return new Date(enfr).toISOString().replace(".000Z", "Z");
 }
 function formatUpdated(updated) {
     var date = new Date(updated);
@@ -350,18 +345,12 @@ function formatSunDelta(hour) {
     var s = Math.floor(3600 * (hour - h - m / 60));
     return (negative ? "Perte" : "Gain") + " de " + m + " minutes " + s + " secondes d'ensoleillement cette semaine";
 }
-function formatWax(wax) {
-    if (wax == null)
-        return '??';
-    var parts = wax.split('/');
-    return parts[0].trim();
-}
 function formatSnow(snow) {
     if (snow == null)
         return '??';
     if (snow == "N/A")
         return "";
-    return "La neige est à " + snow + " &deg;C";
+    return "La neige est à " + snow;
 }
 function formatP8(p8) {
     if (p8 == null)

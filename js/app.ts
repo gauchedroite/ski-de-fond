@@ -1,9 +1,5 @@
 /// <reference path="soleil.ts" />
 
-var google: any = {};
-google.visualization = {};
-google.visualization.Query = {};
-
 var month_names = [ 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre' ];
 var periodes = [ '', 'Ce soir', 'Cette nuit', 'Ce matin', 'Cet après-midi' ];
 
@@ -19,12 +15,15 @@ let ski = <ISkiData>{};
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    google.visualization.Query.setResponse = parseSpreadsheetData_First;
-    var url = "https://spreadsheets.google.com/tq?key=0AqeNjAYIAcUedGl0SWVZZzNtQ0JNTVFuR1dRQ3psMlE&pub=1&gid=6";
-    var script = document.createElement("script");        
-    script.setAttribute("src", url);
-    script.setAttribute("type", "text/javascript");                
-    document.body.appendChild(script);
+    var url = "https://services2.arcgis.com/WLyMuW006nKOfa5Z/arcgis/rest/services/AGOL_GP_WINTER_TRAILS_INFO/FeatureServer/0/query?where=1%3D1&returnGeometry=false&outFields=*&f=pgeojson";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+            parseEsriData(JSON.parse(xhr.responseText));
+		}
+	};
+    xhr.send();
 
     var url2 = "https://www.meteomedia.com/dataaccess/citypage/json/caqc0177?callback=parseCitypageData&t=" + new Date().getTime();
     var script2 = document.createElement("script");        
@@ -38,26 +37,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("semaine-text").innerHTML = formatSunDelta(sun.semaine);
 }, false);
 
-function parseSpreadsheetData_First(response: any) {
-    ski.updatedDate = response.table.rows[0].c[1].v;
+function parseEsriData(data: any) {
+    let props = data.features[0].properties;
 
-    google.visualization.Query.setResponse = parseSpreadsheetData_Second;
-    var url = "https://spreadsheets.google.com/tq?key=0AqeNjAYIAcUedGl0SWVZZzNtQ0JNTVFuR1dRQ3psMlE&pub=1&gid=4";
-    var script = document.createElement("script");        
-    script.setAttribute("src", url);
-    script.setAttribute("type", "text/javascript");                
-    document.body.appendChild(script);
-}
+    var snow = props.TEMP;
+    var wax = props.WAX_FR;
+    var new24 = props.SNOW_24HR;
+    var p8 = props.BASE_P8;
 
-function parseSpreadsheetData_Second(response: any) {
-    var cols = response.table.cols;
-    var rows = response.table.rows;
-    var snow = cols[2].label;
-    var wax = rows[3].c[2].v;
-    var new24 = rows[4].c[2].v;
-    var p8 = rows[5].c[2].v;
-
-    ski.wax = formatWax(wax);
+    ski.updatedDate = parseToZulu(props.LAST_UPDATED_EN, props.LAST_UPDATED_FR);
+    ski.wax = wax;
     ski.p8 = formatP8(p8);
     saveToLocalStorage();
 
@@ -93,6 +82,11 @@ function parseCitypageData(response: any) {
         pa.windSpeed_kmh + ' km/h ' +
         pa.pop_percent + '% ' +
         (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '');
+}
+
+function parseToZulu(en: string, fr: string) {
+    let enfr = en.split(" at ")[0] + " " + fr.split(" à ")[1].replace("h", ":");
+    return new Date(enfr).toISOString().replace(".000Z", "Z");
 }
 
 function formatUpdated(updated: string) {
@@ -134,16 +128,10 @@ function formatSunDelta(hour: number) {
     return (negative ? "Perte" : "Gain") + " de " + m + " minutes " + s + " secondes d'ensoleillement cette semaine";
 }
 
-function formatWax(wax: string) {
-    if (wax == null) return '??';
-    var parts = wax.split('/');
-    return parts[0].trim();
-}
-
 function formatSnow(snow: string) {
     if (snow == null) return '??';
     if (snow == "N/A") return "";
-    return "La neige est à " + snow + " &deg;C";
+    return "La neige est à " + snow;
 }
 
 function formatP8(p8: string) {

@@ -248,7 +248,7 @@ var month_names = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juill
 var periodes = ['', 'Ce soir', 'Cette nuit', 'Ce matin', 'Cet après-midi'];
 var ski = {};
 document.addEventListener('DOMContentLoaded', function () {
-    var url = "https://services2.arcgis.com/WLyMuW006nKOfa5Z/arcgis/rest/services/AGOL_GP_WINTER_TRAILS_INFO/FeatureServer/0/query?where=1%3D1&returnGeometry=false&outFields=*&f=pgeojson";
+    var url = "https://services2.arcgis.com/WLyMuW006nKOfa5Z/ArcGIS/rest/services/Ski_Info_Pub/FeatureServer/0/query?where=1%3D1&returnGeometry=false&outFields=*&f=pgeojson";
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {

@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.fetch(`https://h0th8gm47e.execute-api.us-east-1.amazonaws.com/api/data?cm=caqc0177`)
         .then(res => res.json())
         .then(json => {
-        parseEsriData(json);
+        parseCitypageData(json);
     });
     var timezone = new Date().getTimezoneOffset() / 60;
     var sun = computeSunrise(new Date(), 45.5, 75.5);

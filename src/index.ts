@@ -74,7 +74,7 @@ function parseCitypageData(response: any) {
     ski.windSpeed = obs.windSpeed_kmh;
     saveToLocalStorage();
 
-    document.getElementById('obs-text')!.innerHTML = obs.temperature_c + "&deg;C (" + obs.feelsLike_c + "&deg;C) " + obs.windSpeed_kmh + " km/h";
+    document.getElementById('obs-text')!.innerHTML = obs.tc + "&deg;C (" + obs.fc + "&deg;C) " + obs.w + " km/h";
 
     var pa = response.sterm.periods[0];
     document.getElementById('forecast-a-text')!.innerHTML = 
@@ -82,7 +82,9 @@ function parseCitypageData(response: any) {
         pa.t + ' &deg;C (' + pa.f + '&deg;C) ' +
         pa.w + ' km/h ' +
         pa.pp + '% ' +
-        (pa.rr ? pa.rr + ' mm pluie' : '') + (pa.rr && pa.sr ? ', ' : '') + (pa.sf ? pa.sf + ' cm neige' : '');
+        (pa.r != "-" ? pa.r + ' pluie' : '') +
+        (pa.r != "-" && pa.s != "-" ? ', ' : '') +
+        (pa.s != "-" ? pa.s + ' neige' : '');
 
     // pa = response.sterm.periods[1];
     // document.getElementById('forecast-b-text')!.innerHTML =

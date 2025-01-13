@@ -49,7 +49,7 @@ function parseEsriData(data) {
     document.getElementById('keogan-text').innerHTML = ski.keogan;
 }
 function parseCitypageData(response) {
-    var obs = response.PACKAGE.Observation;
+    var obs = response.obs;
     ski.temperature = obs.temperature_c;
     ski.feelsLike = obs.feelsLike_c;
     ski.windSpeed = obs.windSpeed_kmh;

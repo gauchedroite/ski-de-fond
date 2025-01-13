@@ -68,7 +68,7 @@ function parseEsriData(data: any) {
 }
 
 function parseCitypageData(response: any) {
-    var obs = response.PACKAGE.Observation;
+    var obs = response.obs;
     ski.temperature = obs.temperature_c;
     ski.feelsLike = obs.feelsLike_c;
     ski.windSpeed = obs.windSpeed_kmh;

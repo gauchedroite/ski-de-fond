@@ -1,38 +1,15 @@
 {
   "name": "ski-de-fond",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Les conditions de ski de fond dans le parc de la Gatineau",
   "main": "index.html",
   "author": "Christian Trépanier",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/gauchedroite/ski-de-fond.git"
-  },
-  "config": {
-    "tsc": "-t ES5 -m system --sourceMap --noImplicitAny --suppressImplicitAnyIndexErrors"
-  },
+  "type": "module",
   "scripts": {
-    "tsc": "tsc %npm_package_config_tsc% --outFile ./app.js js/app.ts",
-    "tsc:w": "npm run tsc -- -w",
-
-    "less": "lessc --strict-math=on css/styles.less ./app.css",
-    "less:w": "nodemon -e less -w ./ -x \"npm run less\"",
-
-    "http": "http-server",
-    "dev": "concurrently \"npm run tsc:w\" \"npm run less:w\" \"npm run http\" ",
-    "pages": "git checkout gh-pages && git merge master && git push origin gh-pages && git checkout master"
-  },
-  "dependencies": {
-    "systemjs": "^0.19.41"
+    "dev": "tsc -w"
   },
   "devDependencies": {
-    "concurrently": "^3.1.0",
-    "less": "^2.7.1",
-    "nodemon": "^1.11.0",
-    "typescript": "^2.0.10"
-  },
-  "optionalDependencies": {
-    "http-server": "^0.9.0"
+      "typescript": "^5.3.3"
   }
 }

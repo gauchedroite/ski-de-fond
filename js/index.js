@@ -64,13 +64,15 @@ function parseCitypageData(response) {
             (pa.r != "-" ? pa.r + ' pluie' : '') +
             (pa.r != "-" && pa.s != "-" ? ', ' : '') +
             (pa.s != "-" ? pa.s + ' neige' : '');
-    // pa = response.sterm.periods[1];
-    // document.getElementById('forecast-b-text')!.innerHTML =
-    //     periodes[pa.period] + ": " +
-    //     pa.temperature_c + ' &deg;C (' + pa.feelsLike_c + '&deg;C) ' +
-    //     pa.windSpeed_kmh + ' km/h ' +
-    //     pa.pop_percent + '% ' +
-    //     (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '');
+    pa = response.sterm.periods[1];
+    document.getElementById('forecast-b-text').innerHTML =
+        pa.tstl + ": " +
+            pa.t + ' &deg;C (' + pa.f + '&deg;C) ' +
+            pa.w + ' km/h ' +
+            pa.pp + '% ' +
+            (pa.r != "-" ? pa.r + ' pluie' : '') +
+            (pa.r != "-" && pa.s != "-" ? ', ' : '') +
+            (pa.s != "-" ? pa.s + ' neige' : '');
 }
 function parseToZulu(en, fr) {
     let enfr = en.replace(/th /, " ");

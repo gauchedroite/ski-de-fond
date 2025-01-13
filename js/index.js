@@ -55,20 +55,20 @@ function parseCitypageData(response) {
     ski.windSpeed = obs.windSpeed_kmh;
     saveToLocalStorage();
     document.getElementById('obs-text').innerHTML = obs.temperature_c + "&deg;C (" + obs.feelsLike_c + "&deg;C) " + obs.windSpeed_kmh + " km/h";
-    var pa = response.PACKAGE.ShortTerm.Period[0];
+    var pa = response.sterm.periods[0];
     document.getElementById('forecast-a-text').innerHTML =
-        periodes[pa.period] + ": " +
-            pa.temperature_c + ' &deg;C (' + pa.feelsLike_c + '&deg;C) ' +
-            pa.windSpeed_kmh + ' km/h ' +
-            pa.pop_percent + '% ' +
-            (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '');
-    pa = response.PACKAGE.ShortTerm.Period[1];
-    document.getElementById('forecast-b-text').innerHTML =
-        periodes[pa.period] + ": " +
-            pa.temperature_c + ' &deg;C (' + pa.feelsLike_c + '&deg;C) ' +
-            pa.windSpeed_kmh + ' km/h ' +
-            pa.pop_percent + '% ' +
-            (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '');
+        pa.tstl + ": " +
+            pa.t + ' &deg;C (' + pa.f + '&deg;C) ' +
+            pa.w + ' km/h ' +
+            pa.pp + '% ' +
+            (pa.rr ? pa.rr + ' mm pluie' : '') + (pa.rr && pa.sr ? ', ' : '') + (pa.sf ? pa.sf + ' cm neige' : '');
+    // pa = response.sterm.periods[1];
+    // document.getElementById('forecast-b-text')!.innerHTML =
+    //     periodes[pa.period] + ": " +
+    //     pa.temperature_c + ' &deg;C (' + pa.feelsLike_c + '&deg;C) ' +
+    //     pa.windSpeed_kmh + ' km/h ' +
+    //     pa.pop_percent + '% ' +
+    //     (pa.rain > 0 ? pa.rain_range + ' mm pluie' : '') + (pa.rain > 0 && pa.snow > 0 ? ', ' : '') + (pa.snow > 0 ? pa.snow_range + ' cm neige' : '');
 }
 function parseToZulu(en, fr) {
     let enfr = en.replace(/th /, " ");
